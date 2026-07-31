@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Log in · Our Lily Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="page">
+  <div class="sky-layer"></div>
+
+  <div class="center-screen">
+    <div class="glass-card">
+      <h1 style="font-family:'Fraunces',serif; font-style:italic; color:var(--pink); text-align:center; font-size:1.8rem; margin:0 0 4px;">
+        Welcome back
+      </h1>
+      <p style="text-align:center; color:rgba(255,248,240,0.7); font-size:0.9rem; margin:0 0 24px;">
+        Your garden has been waiting.
+      </p>
+
+      <div id="error" class="form-error" style="display:none;"></div>
+
+      <form id="login-form">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="email" required placeholder="you@example.com" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" required placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn-solid" id="submit-btn">Log in 🌸</button>
+      </form>
+
+      <p style="text-align:center; font-size:0.85rem; margin-top:20px; color:rgba(255,248,240,0.6);">
+        New here? <a href="signup.html" style="color:var(--pink); text-decoration:underline;">Create an account</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { setupAmbience } from "./js/ambience.js";
+  import { supabase } from "./js/supabaseClient.js";
+
+  setupAmbience({ lilyCount: 0, fireflyCount: 0 });
+
+  const form = document.getElementById("login-form");
+  const errorBox = document.getElementById("error");
+  const submitBtn = document.getElementById("submit-btn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorBox.style.display = "none";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Opening the gate…";
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      errorBox.textContent = error.message;
+      errorBox.style.display = "block";
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Log in 🌸";
+      return;
+    }
+
+    window.location.href = "garden.html";
+  });
+</script>
+</body>
+</html>
