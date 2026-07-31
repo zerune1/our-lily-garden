@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Sign up · Our Lily Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="page">
+  <div class="sky-layer"></div>
+
+  <div class="center-screen">
+    <div class="glass-card">
+      <h1 style="font-family:'Fraunces',serif; font-style:italic; color:var(--lavender); text-align:center; font-size:1.8rem; margin:0 0 4px;">
+        Plant your garden
+      </h1>
+      <p style="text-align:center; color:rgba(255,248,240,0.7); font-size:0.9rem; margin:0 0 24px;">
+        Only the two of you will ever have a key.
+      </p>
+
+      <div id="error" class="form-error" style="display:none;"></div>
+      <div id="success" class="form-success" style="display:none;"></div>
+
+      <form id="signup-form">
+        <div class="field">
+          <label>Nickname</label>
+          <input type="text" id="nickname" required placeholder="What should we call you?" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="email" required placeholder="you@example.com" />
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" required minlength="6" placeholder="At least 6 characters" />
+        </div>
+        <button type="submit" class="btn btn-solid" id="submit-btn">Create account 🌷</button>
+      </form>
+
+      <p style="text-align:center; font-size:0.85rem; margin-top:20px; color:rgba(255,248,240,0.6);">
+        Already planted your garden? <a href="login.html" style="color:var(--lavender); text-decoration:underline;">Log in</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { setupAmbience } from "./js/ambience.js";
+  import { supabase } from "./js/supabaseClient.js";
+
+  setupAmbience({ lilyCount: 0, fireflyCount: 0 });
+
+  const form = document.getElementById("signup-form");
+  const errorBox = document.getElementById("error");
+  const successBox = document.getElementById("success");
+  const submitBtn = document.getElementById("submit-btn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorBox.style.display = "none";
+    successBox.style.display = "none";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Planting…";
+
+    const nickname = document.getElementById("nickname").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { nickname } },
+    });
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Create account 🌷";
+
+    if (error) {
+      errorBox.textContent = error.message;
+      errorBox.style.display = "block";
+      return;
+    }
+
+    if (data.session) {
+      window.location.href = "garden.html";
+    } else {
+      successBox.textContent = "Check your email to confirm your account, then log in. 🌸";
+      successBox.style.display = "block";
+      form.reset();
+    }
+  });
+</script>
+</body>
+</html>
