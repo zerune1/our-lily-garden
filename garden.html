@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Our Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div id="loading-gate" class="page" style="display:flex; align-items:center; justify-content:center;">
+  <p style="opacity:0.6;">Opening the garden gate…</p>
+</div>
+
+<div id="app-root" class="page" style="visibility:hidden;">
+  <div class="sky-layer"></div>
+  <div class="lilies-layer"></div>
+
+  <div class="cat left" id="cat-left">🐱</div>
+  <div class="cat right">🐈</div>
+
+  <nav class="navbar">
+    <span class="brand">🌸 Our Lily Garden</span>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <span id="greeting" style="font-size:0.85rem; opacity:0.8;"></span>
+      <button id="logout-btn" class="btn-ghost">Log out</button>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="garden-heading">
+      <h1>Welcome back to your garden 🌿</h1>
+      <p id="note-count">Loading…</p>
+    </div>
+
+    <div id="daily-banner" class="daily-banner" style="display:none;">
+      <div class="label">Today's love note ✨</div>
+      <p class="text" id="daily-banner-text"></p>
+    </div>
+
+    <form id="composer-form" class="composer">
+      <textarea id="note-content" rows="3" placeholder="Leave a little note for them to find… 💌"></textarea>
+      <div class="composer-row">
+        <div class="style-pills">
+          <button type="button" class="style-pill active" data-style="sticky">📝 Sticky</button>
+          <button type="button" class="style-pill" data-style="lily">🌸 Lily</button>
+          <button type="button" class="style-pill" data-style="cat">🐱 Cat</button>
+        </div>
+        <button type="submit" class="btn-send" id="send-btn">Leave note</button>
+      </div>
+    </form>
+
+    <p id="loading-state" class="loading-state">Growing your garden…</p>
+    <p id="empty-state" class="empty-state" style="display:none;">No notes yet — plant the first one above 🌱</p>
+    <div id="notes-grid" class="notes-grid"></div>
+  </main>
+</div>
+
+<script type="module">
+  import { initGarden } from "./js/garden.js";
+  initGarden();
+</script>
+</body>
+</html>
