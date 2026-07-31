@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Our Lily Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="page">
+  <div class="sky-layer"></div>
+  <div class="lilies-layer"></div>
+  <div class="garden-glow"></div>
+
+  <div class="cat left">🐱</div>
+  <div class="cat right">🐈</div>
+
+  <div class="center-screen">
+    <svg class="bloom-mark" viewBox="0 0 64 64" fill="none">
+      <path d="M32 32 C32 32 20 22 20 10 C20 4 26 2 32 10 C38 2 44 4 44 10 C44 22 32 32 32 32Z" fill="#F5C6D8"/>
+      <path d="M32 32 C32 32 44 42 44 54 C44 60 38 62 32 54 C26 62 20 60 20 54 C20 42 32 32 32 32Z" fill="#CBB8E8"/>
+      <path d="M32 32 C32 32 22 20 10 20 C4 20 2 26 10 32 C2 38 4 44 10 44 C22 44 32 32 32 32Z" fill="#AEDCEE"/>
+      <path d="M32 32 C32 32 42 44 54 44 C60 44 62 38 54 32 C62 26 60 20 54 20 C42 20 32 32 32 32Z" fill="#F2A98F"/>
+      <circle cx="32" cy="32" r="5" fill="#FFEAB0"/>
+    </svg>
+
+    <h1 class="hero">Our Lily Garden</h1>
+    <p class="subheading">A place where our memories bloom forever.</p>
+
+    <a href="login.html" class="btn" style="margin-top:28px; opacity:0; animation: riseIn 1s ease 2.1s forwards;">
+      Step inside 🌸
+    </a>
+  </div>
+
+  <p class="footer-note">for just the two of us</p>
+</div>
+
+<script type="module">
+  import { setupAmbience } from "./js/ambience.js";
+  setupAmbience();
+</script>
+</body>
+</html>
