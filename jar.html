@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Reasons I Love You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .jar-wrap { text-align: center; margin-bottom: 30px; }
+  .jar-btn {
+    font-size: 6rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+    transition: transform 0.15s ease;
+  }
+  .jar-btn:active { transform: scale(0.92); }
+  .jar-reason {
+    margin-top: 20px;
+    background: rgba(245,198,216,0.12);
+    border: 1px solid rgba(245,198,216,0.3);
+    border-radius: 18px;
+    padding: 20px;
+    font-style: italic;
+    font-size: 1.05rem;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .jar-reason.show { opacity: 1; }
+  .add-box {
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 18px;
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+
+<div id="loading-gate" class="page" style="display:flex; align-items:center; justify-content:center;">
+  <p style="opacity:0.6;">Opening the jar…</p>
+</div>
+
+<div id="app-root" class="page" style="visibility:hidden;">
+  <div class="sky-layer"></div>
+
+  <nav class="navbar">
+    <a href="garden.html" class="brand" style="text-decoration:none;">🌸 Our Lily Garden</a>
+    <a href="garden.html" class="btn-ghost" style="text-decoration:none;">← Back to garden</a>
+  </nav>
+
+  <main class="content">
+    <div class="garden-heading">
+      <h1>Reasons I Love You 🫙</h1>
+      <p id="reason-count">Loading…</p>
+    </div>
+
+    <div class="jar-wrap">
+      <button class="jar-btn" id="jar-button">🫙</button>
+      <div class="jar-reason" id="jar-reason-box">Tap the jar 🌸</div>
+    </div>
+
+    <form id="add-form" class="add-box">
+      <div class="field">
+        <label>Add a reason to the jar</label>
+        <input type="text" id="reason-input" placeholder="I love the way you…" required />
+      </div>
+      <button type="submit" class="btn-send" id="add-btn">Add to jar 🫙</button>
+    </form>
+  </main>
+</div>
+
+<script type="module">
+  import { initJar } from "./js/jar.js";
+  initJar();
+</script>
+</body>
+</html>
