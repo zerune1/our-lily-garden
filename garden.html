@@ -28,8 +28,13 @@
       <button id="logout-btn" class="btn-ghost">Log out</button>
     </div>
   </nav>
-
   <main class="content">
+        <div id="love-counter" class="daily-banner" style="margin-bottom:20px;">
+      <div class="label">Together for</div>
+      <p class="text" id="love-counter-text">calculating…</p>
+    </div>
+
+
     <div class="garden-heading">
       <h1>Welcome back to your garden 🌿</h1>
       <p id="note-count">Loading…</p>
@@ -60,7 +65,10 @@
 
 <script type="module">
   import { initGarden } from "./js/garden.js";
+  import { startLoveCounter } from "./js/loveCounter.js";
   initGarden();
+  startLoveCounter();
 </script>
+
 </body>
 </html>
