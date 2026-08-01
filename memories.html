@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Our Memories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .memories-grid { display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; }
+  .polaroid {
+    background: #fdfaf3;
+    padding: 12px 12px 40px;
+    width: 220px;
+    border-radius: 4px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.35);
+    transform: rotate(-2deg);
+    position: relative;
+  }
+  .polaroid:nth-child(even) { transform: rotate(2deg); }
+  .polaroid img { width: 100%; height: 200px; object-fit: cover; border-radius: 2px; display: block; }
+  .polaroid .caption { color: var(--ink); font-size: 0.85rem; margin-top: 10px; text-align: center; }
+  .polaroid .tags { color: #8a7b6a; font-size: 0.7rem; text-align: center; margin-top: 4px; }
+  .upload-box {
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 28px;
+  }
+  .upload-box input[type="file"] { color: var(--cream); font-size: 0.85rem; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div id="loading-gate" class="page" style="display:flex; align-items:center; justify-content:center;">
+  <p style="opacity:0.6;">Opening the memory box…</p>
+</div>
+
+<div id="app-root" class="page" style="visibility:hidden;">
+  <div class="sky-layer"></div>
+
+  <nav class="navbar">
+    <a href="garden.html" class="brand" style="text-decoration:none;">🌸 Our Lily Garden</a>
+    <a href="garden.html" class="btn-ghost" style="text-decoration:none;">← Back to garden</a>
+  </nav>
+
+  <main class="content">
+    <div class="garden-heading">
+      <h1>Our Memories 📸</h1>
+      <p id="memory-count">Loading…</p>
+    </div>
+
+    <form id="upload-form" class="upload-box">
+      <input type="file" id="memory-file" accept="image/*" required />
+      <div class="field">
+        <input type="text" id="memory-caption" placeholder="Write a little caption…" />
+      </div>
+      <div class="field">
+        <input type="text" id="memory-tags" placeholder="Tags, comma separated (e.g. beach, 2024)" />
+      </div>
+      <button type="submit" class="btn-send" id="upload-btn">Add memory 🌸</button>
+    </form>
+
+    <p id="loading-state" class="loading-state">Loading memories…</p>
+    <p id="empty-state" class="empty-state" style="display:none;">No memories yet — add your first photo above 🌱</p>
+    <div id="memories-grid" class="memories-grid"></div>
+  </main>
+</div>
+
+<script type="module">
+  import { initMemories } from "./js/memories.js";
+  initMemories();
+</script>
+</body>
+</html>
