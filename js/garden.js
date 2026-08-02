@@ -153,6 +153,12 @@ async function loadNotes() {
   grid.querySelectorAll("[data-fav-id]").forEach((btn) => {
     btn.addEventListener("click", () => toggleFavorite(btn.dataset.favId, btn.dataset.favState !== "true"));
   });
+  grid.querySelectorAll("[data-edit-id]").forEach((btn) => {
+    btn.addEventListener("click", () => editNote(btn.dataset.editId, btn.dataset.editContent));
+  });
+  grid.querySelectorAll("[data-delete-id]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteNote(btn.dataset.deleteId));
+  });
 
   const liliesLayer = document.querySelector(".lilies-layer");
   if (liliesLayer && liliesLayer.childElementCount === 0) {
@@ -168,6 +174,8 @@ function renderNoteCard(note) {
   const icon = STYLE_ICON[note.style] || "📝";
   const date = new Date(note.created_at).toLocaleDateString();
   const safeContent = escapeHtml(note.content);
+  const isMine = note.author_id === currentUser.id;
+  const encodedContent = encodeURIComponent(note.content);
 
   return `
     <div class="note-card style-${note.style}">
@@ -179,6 +187,8 @@ function renderNoteCard(note) {
       <div class="note-actions">
         <button data-pin-id="${note.id}" data-pin-state="${note.is_pinned}" class="${note.is_pinned ? "active" : ""}" title="Pin">📌</button>
         <button data-fav-id="${note.id}" data-fav-state="${note.is_favorite}" class="${note.is_favorite ? "active" : ""}" title="Favorite">${note.is_favorite ? "❤️" : "🤍"}</button>
+        ${isMine ? `<button data-edit-id="${note.id}" data-edit-content="${encodedContent}" title="Edit">✏️</button>` : ""}
+        ${isMine ? `<button data-delete-id="${note.id}" title="Delete">🗑️</button>` : ""}
       </div>
     </div>
   `;
@@ -191,6 +201,23 @@ async function togglePin(id, next) {
 
 async function toggleFavorite(id, next) {
   await supabase.from("love_notes").update({ is_favorite: next }).eq("id", id);
+  await loadNotes();
+}
+
+async function editNote(id, encodedContent) {
+  const currentContent = decodeURIComponent(encodedContent);
+  const updated = prompt("Edit your note:", currentContent);
+  if (updated === null || updated.trim() === "") return;
+
+  await supabase.from("love_notes").update({ content: updated.trim() }).eq("id", id);
+  await loadNotes();
+}
+
+async function deleteNote(id) {
+  const confirmed = confirm("Delete this note? This can't be undone.");
+  if (!confirmed) return;
+
+  await supabase.from("love_notes").delete().eq("id", id);
   await loadNotes();
 }
 
