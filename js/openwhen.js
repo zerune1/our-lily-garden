@@ -2,6 +2,7 @@ import { supabase } from "./supabaseClient.js";
 
 let currentUser = null;
 let lettersData = [];
+let currentLetterId = null;
 
 export async function initOpenWhen() {
   const { data: { session } } = await supabase.auth.getSession();
@@ -60,9 +61,40 @@ function wireWriteForm() {
 function wireModal() {
   const modal = document.getElementById("letter-modal");
   const closeBtn = document.getElementById("modal-close");
+  const editBtn = document.getElementById("modal-edit-btn");
+  const deleteBtn = document.getElementById("modal-delete-btn");
+
   closeBtn.addEventListener("click", () => modal.classList.remove("open"));
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.classList.remove("open");
+  });
+
+  editBtn.addEventListener("click", async () => {
+    const letter = lettersData.find((l) => l.id === currentLetterId);
+    if (!letter) return;
+
+    const newTitle = prompt("Edit title:", letter.title);
+    if (newTitle === null) return;
+
+    const newContent = prompt("Edit letter:", letter.content);
+    if (newContent === null) return;
+
+    await supabase
+      .from("open_when_letters")
+      .update({ title: newTitle.trim(), content: newContent.trim() })
+      .eq("id", currentLetterId);
+
+    modal.classList.remove("open");
+    await loadLetters();
+  });
+
+  deleteBtn.addEventListener("click", async () => {
+    const confirmed = confirm("Delete this letter? This can't be undone.");
+    if (!confirmed) return;
+
+    await supabase.from("open_when_letters").delete().eq("id", currentLetterId);
+    modal.classList.remove("open");
+    await loadLetters();
   });
 }
 
@@ -70,8 +102,14 @@ function openLetter(id) {
   const letter = lettersData.find((l) => l.id === id);
   if (!letter) return;
 
+  currentLetterId = id;
+
   document.getElementById("modal-title").textContent = letter.title;
   document.getElementById("modal-content").textContent = letter.content;
+
+  const ownerActions = document.getElementById("modal-owner-actions");
+  ownerActions.style.display = letter.author_id === currentUser.id ? "flex" : "none";
+
   document.getElementById("letter-modal").classList.add("open");
 }
 
