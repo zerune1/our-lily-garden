@@ -173,9 +173,9 @@ function renderMemoryCard(memory) {
     const cAuthor = profilesById[c.author_id]?.nickname || "Someone";
     const cMine = c.author_id === currentUser.id;
     return `
-      <div style="font-size:0.75rem; padding:5px 0; border-top:1px solid rgba(0,0,0,0.08); display:flex; justify-content:space-between; gap:6px; text-align:left;">
+      <div style="font-size:0.75rem; padding:5px 0; border-top:1px solid rgba(0,0,0,0.08); display:flex; justify-content:space-between; gap:6px; text-align:left; color:#4A3B4E;">
         <span><strong>${escapeHtml(cAuthor)}:</strong> ${escapeHtml(c.content)}</span>
-        ${cMine ? `<button data-delete-comment="${c.id}" data-memory-id="${memory.id}" style="background:none; border:none; cursor:pointer; opacity:0.5;">✕</button>` : ""}
+        ${cMine ? `<button data-delete-comment="${c.id}" data-memory-id="${memory.id}" style="background:none; border:none; cursor:pointer; opacity:0.5; color:#4A3B4E;">✕</button>` : ""}
       </div>
     `;
   }).join("");
@@ -188,12 +188,12 @@ function renderMemoryCard(memory) {
       <div style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
         ${isMine ? `<button data-edit-id="${memory.id}" data-edit-caption="${encodedCaption}" data-edit-tags="${encodedTags}" style="background:none; border:none; cursor:pointer; font-size:1rem;" title="Edit">✏️</button>` : ""}
         ${isMine ? `<button data-delete-id="${memory.id}" data-delete-path="${storagePath}" style="background:none; border:none; cursor:pointer; font-size:1rem;" title="Delete">🗑️</button>` : ""}
-        <button data-toggle-thread="${memory.id}" style="background:none; border:none; cursor:pointer; font-size:0.85rem;" title="Replies">💬 ${comments.length}</button>
+        <button data-toggle-thread="${memory.id}" style="background:none; border:none; cursor:pointer; font-size:0.85rem; color:#4A3B4E;" title="Replies">💬 ${comments.length}</button>
       </div>
       <div style="${isOpen ? "" : "display:none;"} margin-top:8px; text-align:left;">
         ${commentsHtml}
         <form data-comment-form="${memory.id}" style="display:flex; gap:6px; margin-top:8px;">
-          <input type="text" placeholder="Reply…" required style="flex:1; border-radius:8px; border:1px solid rgba(0,0,0,0.15); padding:6px 8px; font-size:0.78rem; font-family:inherit;" />
+          <input type="text" placeholder="Reply…" required style="flex:1; border-radius:8px; border:1px solid rgba(0,0,0,0.15); padding:6px 8px; font-size:0.78rem; font-family:inherit; color:#4A3B4E;" />
           <button type="submit" style="border:none; border-radius:8px; padding:6px 10px; background:rgba(0,0,0,0.1); cursor:pointer; font-size:0.78rem;">➤</button>
         </form>
       </div>
