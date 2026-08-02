@@ -1,6 +1,9 @@
 import { supabase } from "./supabaseClient.js";
 
 let currentUser = null;
+let profilesById = {};
+let commentsByMemory = {};
+let openThreads = new Set();
 
 export async function initMemories() {
   const { data: { session } } = await supabase.auth.getSession();
@@ -15,8 +18,16 @@ export async function initMemories() {
   document.getElementById("app-root").style.visibility = "visible";
   document.getElementById("loading-gate").style.display = "none";
 
+  await loadProfiles();
   wireUploadForm();
   await loadMemories();
+}
+
+async function loadProfiles() {
+  const { data, error } = await supabase.from("profiles").select("*");
+  if (error) return;
+  profilesById = {};
+  for (const p of data) profilesById[p.id] = p;
 }
 
 function wireUploadForm() {
@@ -108,6 +119,21 @@ async function loadMemories() {
   }
 
   emptyState.style.display = "none";
+
+  const memoryIds = data.map((m) => m.id);
+  const { data: commentsData } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("item_type", "memory")
+    .in("item_id", memoryIds)
+    .order("created_at", { ascending: true });
+
+  commentsByMemory = {};
+  (commentsData || []).forEach((c) => {
+    if (!commentsByMemory[c.item_id]) commentsByMemory[c.item_id] = [];
+    commentsByMemory[c.item_id].push(c);
+  });
+
   grid.innerHTML = data.map(renderMemoryCard).join("");
 
   grid.querySelectorAll("[data-edit-id]").forEach((btn) => {
@@ -120,6 +146,15 @@ async function loadMemories() {
       deleteMemory(btn.dataset.deleteId, btn.dataset.deletePath)
     );
   });
+  grid.querySelectorAll("[data-toggle-thread]").forEach((btn) => {
+    btn.addEventListener("click", () => toggleThread(btn.dataset.toggleThread));
+  });
+  grid.querySelectorAll("[data-comment-form]").forEach((form) => {
+    form.addEventListener("submit", (e) => submitComment(e, form.dataset.commentForm));
+  });
+  grid.querySelectorAll("[data-delete-comment]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteComment(btn.dataset.deleteComment, btn.dataset.memoryId));
+  });
 }
 
 function renderMemoryCard(memory) {
@@ -131,19 +166,69 @@ function renderMemoryCard(memory) {
   const encodedTags = encodeURIComponent((memory.tags || []).join(", "));
   const storagePath = memory.storage_path || "";
 
+  const comments = commentsByMemory[memory.id] || [];
+  const isOpen = openThreads.has(memory.id);
+
+  const commentsHtml = comments.map((c) => {
+    const cAuthor = profilesById[c.author_id]?.nickname || "Someone";
+    const cMine = c.author_id === currentUser.id;
+    return `
+      <div style="font-size:0.75rem; padding:5px 0; border-top:1px solid rgba(0,0,0,0.08); display:flex; justify-content:space-between; gap:6px; text-align:left;">
+        <span><strong>${escapeHtml(cAuthor)}:</strong> ${escapeHtml(c.content)}</span>
+        ${cMine ? `<button data-delete-comment="${c.id}" data-memory-id="${memory.id}" style="background:none; border:none; cursor:pointer; opacity:0.5;">✕</button>` : ""}
+      </div>
+    `;
+  }).join("");
+
   return `
     <div class="polaroid">
       <img src="${memory.image_url}" alt="${caption}" loading="lazy" />
       <div class="caption">${caption || date}</div>
       ${tags ? `<div class="tags">${tags}</div>` : ""}
-      ${isMine ? `
-        <div style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
-          <button data-edit-id="${memory.id}" data-edit-caption="${encodedCaption}" data-edit-tags="${encodedTags}" style="background:none; border:none; cursor:pointer; font-size:1rem;" title="Edit">✏️</button>
-          <button data-delete-id="${memory.id}" data-delete-path="${storagePath}" style="background:none; border:none; cursor:pointer; font-size:1rem;" title="Delete">🗑️</button>
-        </div>
-      ` : ""}
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
+        ${isMine ? `<button data-edit-id="${memory.id}" data-edit-caption="${encodedCaption}" data-edit-tags="${encodedTags}" style="background:none; border:none; cursor:pointer; font-size:1rem;" title="Edit">✏️</button>` : ""}
+        ${isMine ? `<button data-delete-id="${memory.id}" data-delete-path="${storagePath}" style="background:none; border:none; cursor:pointer; font-size:1rem;" title="Delete">🗑️</button>` : ""}
+        <button data-toggle-thread="${memory.id}" style="background:none; border:none; cursor:pointer; font-size:0.85rem;" title="Replies">💬 ${comments.length}</button>
+      </div>
+      <div style="${isOpen ? "" : "display:none;"} margin-top:8px; text-align:left;">
+        ${commentsHtml}
+        <form data-comment-form="${memory.id}" style="display:flex; gap:6px; margin-top:8px;">
+          <input type="text" placeholder="Reply…" required style="flex:1; border-radius:8px; border:1px solid rgba(0,0,0,0.15); padding:6px 8px; font-size:0.78rem; font-family:inherit;" />
+          <button type="submit" style="border:none; border-radius:8px; padding:6px 10px; background:rgba(0,0,0,0.1); cursor:pointer; font-size:0.78rem;">➤</button>
+        </form>
+      </div>
     </div>
   `;
+}
+
+function toggleThread(id) {
+  if (openThreads.has(id)) openThreads.delete(id);
+  else openThreads.add(id);
+  loadMemories();
+}
+
+async function submitComment(e, memoryId) {
+  e.preventDefault();
+  const input = e.target.querySelector("input");
+  const content = input.value.trim();
+  if (!content) return;
+
+  openThreads.add(memoryId);
+
+  await supabase.from("comments").insert({
+    item_type: "memory",
+    item_id: memoryId,
+    author_id: currentUser.id,
+    content,
+  });
+
+  await loadMemories();
+}
+
+async function deleteComment(commentId, memoryId) {
+  openThreads.add(memoryId);
+  await supabase.from("comments").delete().eq("id", commentId);
+  await loadMemories();
 }
 
 async function editMemory(id, encodedCaption, encodedTags) {
