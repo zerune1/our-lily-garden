@@ -4,6 +4,8 @@ let currentUser = null;
 let currentProfile = null;
 let profilesById = {};
 let selectedStyle = "sticky";
+let commentsByNote = {};
+let openThreads = new Set();
 
 const STYLE_ICON = { sticky: "📝", lily: "🌸", cat: "🐱" };
 
@@ -145,6 +147,21 @@ async function loadNotes() {
   }
 
   emptyState.style.display = "none";
+
+  const noteIds = data.map((n) => n.id);
+  const { data: commentsData } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("item_type", "note")
+    .in("item_id", noteIds)
+    .order("created_at", { ascending: true });
+
+  commentsByNote = {};
+  (commentsData || []).forEach((c) => {
+    if (!commentsByNote[c.item_id]) commentsByNote[c.item_id] = [];
+    commentsByNote[c.item_id].push(c);
+  });
+
   grid.innerHTML = data.map(renderNoteCard).join("");
 
   grid.querySelectorAll("[data-pin-id]").forEach((btn) => {
@@ -158,6 +175,15 @@ async function loadNotes() {
   });
   grid.querySelectorAll("[data-delete-id]").forEach((btn) => {
     btn.addEventListener("click", () => deleteNote(btn.dataset.deleteId));
+  });
+  grid.querySelectorAll("[data-toggle-thread]").forEach((btn) => {
+    btn.addEventListener("click", () => toggleThread(btn.dataset.toggleThread));
+  });
+  grid.querySelectorAll("[data-comment-form]").forEach((form) => {
+    form.addEventListener("submit", (e) => submitComment(e, form.dataset.commentForm));
+  });
+  grid.querySelectorAll("[data-delete-comment]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteComment(btn.dataset.deleteComment, btn.dataset.noteId));
   });
 
   const liliesLayer = document.querySelector(".lilies-layer");
@@ -177,6 +203,20 @@ function renderNoteCard(note) {
   const isMine = note.author_id === currentUser.id;
   const encodedContent = encodeURIComponent(note.content);
 
+  const comments = commentsByNote[note.id] || [];
+  const isOpen = openThreads.has(note.id);
+
+  const commentsHtml = comments.map((c) => {
+    const cAuthor = profilesById[c.author_id]?.nickname || "Someone";
+    const cMine = c.author_id === currentUser.id;
+    return `
+      <div style="font-size:0.78rem; padding:6px 0; border-top:1px solid rgba(0,0,0,0.08); display:flex; justify-content:space-between; gap:6px;">
+        <span><strong>${escapeHtml(cAuthor)}:</strong> ${escapeHtml(c.content)}</span>
+        ${cMine ? `<button data-delete-comment="${c.id}" data-note-id="${note.id}" style="background:none; border:none; cursor:pointer; opacity:0.5;">✕</button>` : ""}
+      </div>
+    `;
+  }).join("");
+
   return `
     <div class="note-card style-${note.style}">
       <div class="note-meta">
@@ -189,9 +229,47 @@ function renderNoteCard(note) {
         <button data-fav-id="${note.id}" data-fav-state="${note.is_favorite}" class="${note.is_favorite ? "active" : ""}" title="Favorite">${note.is_favorite ? "❤️" : "🤍"}</button>
         ${isMine ? `<button data-edit-id="${note.id}" data-edit-content="${encodedContent}" title="Edit">✏️</button>` : ""}
         ${isMine ? `<button data-delete-id="${note.id}" title="Delete">🗑️</button>` : ""}
+        <button data-toggle-thread="${note.id}" title="Replies">💬 ${comments.length}</button>
+      </div>
+      <div style="${isOpen ? "" : "display:none;"} margin-top:8px;">
+        ${commentsHtml}
+        <form data-comment-form="${note.id}" style="display:flex; gap:6px; margin-top:8px;">
+          <input type="text" placeholder="Reply…" required style="flex:1; border-radius:8px; border:1px solid rgba(0,0,0,0.15); padding:6px 8px; font-size:0.8rem; font-family:inherit;" />
+          <button type="submit" style="border:none; border-radius:8px; padding:6px 10px; background:rgba(0,0,0,0.1); cursor:pointer; font-size:0.8rem;">➤</button>
+        </form>
       </div>
     </div>
   `;
+}
+
+function toggleThread(noteId) {
+  if (openThreads.has(noteId)) openThreads.delete(noteId);
+  else openThreads.add(noteId);
+  loadNotes();
+}
+
+async function submitComment(e, noteId) {
+  e.preventDefault();
+  const input = e.target.querySelector("input");
+  const content = input.value.trim();
+  if (!content) return;
+
+  openThreads.add(noteId);
+
+  await supabase.from("comments").insert({
+    item_type: "note",
+    item_id: noteId,
+    author_id: currentUser.id,
+    content,
+  });
+
+  await loadNotes();
+}
+
+async function deleteComment(commentId, noteId) {
+  openThreads.add(noteId);
+  await supabase.from("comments").delete().eq("id", commentId);
+  await loadNotes();
 }
 
 async function togglePin(id, next) {
@@ -225,6 +303,13 @@ function subscribeToNoteChanges() {
   supabase
     .channel("love_notes_changes")
     .on("postgres_changes", { event: "*", schema: "public", table: "love_notes" }, () => {
+      loadNotes();
+    })
+    .subscribe();
+
+  supabase
+    .channel("comments_changes")
+    .on("postgres_changes", { event: "*", schema: "public", table: "comments" }, () => {
       loadNotes();
     })
     .subscribe();
