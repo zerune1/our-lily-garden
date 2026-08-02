@@ -23,13 +23,73 @@
   .polaroid .caption { color: var(--ink); font-size: 0.85rem; margin-top: 10px; text-align: center; }
   .polaroid .tags { color: #8a7b6a; font-size: 0.7rem; text-align: center; margin-top: 4px; }
   .upload-box {
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.12);
     border-radius: 20px;
     padding: 18px;
     margin-bottom: 28px;
   }
   .upload-box input[type="file"] { color: var(--cream); font-size: 0.85rem; margin-bottom: 10px; }
+
+  /* ---------- Meadow background ---------- */
+  #app-root.page {
+    background: linear-gradient(to bottom, #AEDCEE 0%, #CFEFD8 55%, #BFE3CB 100%);
+    overflow: hidden;
+  }
+  .sun {
+    position: absolute; top: 30px; right: 30px;
+    width: 70px; height: 70px; border-radius: 50%;
+    background: radial-gradient(circle, #fff6c9, #ffe17a);
+    box-shadow: 0 0 40px rgba(255,230,150,0.7);
+    z-index: 1;
+  }
+  .grass-strip {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 16%;
+    background: linear-gradient(to bottom, #7ec850, #4f9c3a);
+    z-index: 2;
+  }
+  .grass-strip::before {
+    content: ''; position: absolute; top: -14px; left: 0; right: 0; height: 16px;
+    background:
+      repeating-linear-gradient(115deg, #6cb84a 0 8px, transparent 8px 16px),
+      repeating-linear-gradient(65deg, #5da83e 0 8px, transparent 8px 16px);
+  }
+  .butterfly {
+    position: absolute; font-size: 1.6rem; z-index: 3;
+    animation: flutter 6s ease-in-out infinite;
+  }
+  @keyframes flutter {
+    0%, 100% { transform: translate(0,0) rotate(0deg); }
+    25% { transform: translate(15px,-20px) rotate(10deg); }
+    50% { transform: translate(-10px,-35px) rotate(-8deg); }
+    75% { transform: translate(10px,-15px) rotate(5deg); }
+  }
+  .bee {
+    position: absolute; font-size: 1.3rem; z-index: 3;
+    animation: buzz 3s ease-in-out infinite;
+  }
+  @keyframes buzz {
+    0%, 100% { transform: translate(0,0); }
+    25% { transform: translate(8px,-6px); }
+    50% { transform: translate(-6px,-10px); }
+    75% { transform: translate(6px,-4px); }
+  }
+  .cat-big-wrap, .cat-kitten-wrap {
+    position: absolute; bottom: 6%; z-index: 5;
+    animation: catBob 4s ease-in-out infinite;
+  }
+  .cat-big-wrap { left: 3%; }
+  .cat-kitten-wrap { left: 24%; animation-duration: 3.3s; }
+  @keyframes catBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .tail-big { transform-origin: 115px 90px; animation: tailSway 2.6s ease-in-out infinite; }
+  .tail-kitten { transform-origin: 78px 70px; animation: tailSway 2s ease-in-out infinite; }
+  @keyframes tailSway {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(9deg); }
+  }
 </style>
 </head>
 <body>
@@ -39,7 +99,71 @@
 </div>
 
 <div id="app-root" class="page" style="visibility:hidden;">
-  <div class="sky-layer"></div>
+  <div class="sun"></div>
+
+  <span class="butterfly" style="top:12%; left:15%;">🦋</span>
+  <span class="butterfly" style="top:20%; left:70%; animation-delay:1.5s;">🦋</span>
+  <span class="butterfly" style="top:30%; left:45%; animation-delay:3s;">🦋</span>
+  <span class="butterfly" style="top:15%; left:85%; animation-delay:0.7s;">🦋</span>
+  <span class="bee" style="top:25%; left:30%;">🐝</span>
+  <span class="bee" style="top:35%; left:60%; animation-delay:1.2s;">🐝</span>
+
+  <div class="grass-strip"></div>
+
+  <div class="cat-big-wrap">
+    <svg viewBox="0 0 140 130" width="120" height="112">
+      <path class="tail-big" d="M115 90 Q150 80 140 40 Q135 20 115 25" fill="none" stroke="#E8A45C" stroke-width="14" stroke-linecap="round"/>
+      <ellipse cx="70" cy="95" rx="48" ry="32" fill="#F2AE68"/>
+      <ellipse cx="70" cy="105" rx="26" ry="18" fill="#FFF3DD"/>
+      <circle cx="70" cy="50" r="34" fill="#F2AE68"/>
+      <path d="M42 30 L34 4 L58 24 Z" fill="#F2AE68"/>
+      <path d="M98 30 L106 4 L82 24 Z" fill="#F2AE68"/>
+      <path d="M44 26 L40 12 L54 22 Z" fill="#FFD9A6"/>
+      <path d="M96 26 L100 12 L86 22 Z" fill="#FFD9A6"/>
+      <ellipse cx="70" cy="62" rx="20" ry="14" fill="#FFF3DD"/>
+      <ellipse cx="58" cy="48" rx="5" ry="7" fill="#3A2B22"/>
+      <ellipse cx="82" cy="48" rx="5" ry="7" fill="#3A2B22"/>
+      <circle cx="59.5" cy="45" r="1.5" fill="#fff"/>
+      <circle cx="83.5" cy="45" r="1.5" fill="#fff"/>
+      <path d="M67 58 L73 58 L70 62 Z" fill="#E88A8A"/>
+      <line x1="40" y1="58" x2="58" y2="60" stroke="#C88A4A" stroke-width="1.5"/>
+      <line x1="40" y1="66" x2="58" y2="64" stroke="#C88A4A" stroke-width="1.5"/>
+      <line x1="100" y1="58" x2="82" y2="60" stroke="#C88A4A" stroke-width="1.5"/>
+      <line x1="100" y1="66" x2="82" y2="64" stroke="#C88A4A" stroke-width="1.5"/>
+    </svg>
+  </div>
+
+  <div class="cat-kitten-wrap">
+    <svg viewBox="0 0 100 95" width="85" height="80">
+      <path class="tail-kitten" d="M78 70 Q100 65 95 40 Q92 25 78 28" fill="none" stroke="#C9A06B" stroke-width="10" stroke-linecap="round"/>
+      <line x1="90" y1="35" x2="97" y2="33" stroke="#4a3222" stroke-width="4" stroke-linecap="round"/>
+      <line x1="87" y1="48" x2="96" y2="47" stroke="#4a3222" stroke-width="4" stroke-linecap="round"/>
+      <line x1="80" y1="60" x2="90" y2="60" stroke="#4a3222" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="48" cy="68" rx="32" ry="22" fill="#C9A06B"/>
+      <circle cx="48" cy="34" r="24" fill="#C9A06B"/>
+      <path d="M30 20 L25 4 L42 16 Z" fill="#C9A06B"/>
+      <path d="M66 20 L71 4 L54 16 Z" fill="#C9A06B"/>
+      <path d="M31 17 L28 8 L38 15 Z" fill="#FFEBD1"/>
+      <path d="M65 17 L68 8 L58 15 Z" fill="#FFEBD1"/>
+      <path d="M38 12 Q48 6 58 12" fill="none" stroke="#4a3222" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M30 22 Q34 18 38 22" fill="none" stroke="#4a3222" stroke-width="2" stroke-linecap="round"/>
+      <path d="M58 22 Q62 18 66 22" fill="none" stroke="#4a3222" stroke-width="2" stroke-linecap="round"/>
+      <path d="M24 55 Q30 48 24 62" fill="none" stroke="#4a3222" stroke-width="3" stroke-linecap="round"/>
+      <path d="M32 50 Q38 44 34 58" fill="none" stroke="#4a3222" stroke-width="3" stroke-linecap="round"/>
+      <path d="M64 50 Q58 44 62 58" fill="none" stroke="#4a3222" stroke-width="3" stroke-linecap="round"/>
+      <path d="M72 55 Q66 48 72 62" fill="none" stroke="#4a3222" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="48" cy="42" rx="14" ry="10" fill="#FFEBD1"/>
+      <ellipse cx="39" cy="32" rx="4" ry="5.5" fill="#3A2B22"/>
+      <ellipse cx="57" cy="32" rx="4" ry="5.5" fill="#3A2B22"/>
+      <circle cx="40" cy="29.5" r="1.2" fill="#fff"/>
+      <circle cx="58" cy="29.5" r="1.2" fill="#fff"/>
+      <path d="M45 39 L51 39 L48 42 Z" fill="#D97A7A"/>
+      <line x1="20" y1="40" x2="36" y2="41" stroke="#8a6a45" stroke-width="1.2"/>
+      <line x1="20" y1="46" x2="36" y2="45" stroke="#8a6a45" stroke-width="1.2"/>
+      <line x1="76" y1="40" x2="60" y2="41" stroke="#8a6a45" stroke-width="1.2"/>
+      <line x1="76" y1="46" x2="60" y2="45" stroke="#8a6a45" stroke-width="1.2"/>
+    </svg>
+  </div>
 
   <nav class="navbar">
     <a href="garden.html" class="brand" style="text-decoration:none;">🌸 Our Lily Garden</a>
@@ -48,8 +172,8 @@
 
   <main class="content">
     <div class="garden-heading">
-      <h1>Our Memories 📸</h1>
-      <p id="memory-count">Loading…</p>
+      <h1 style="color:var(--ink);">Our Memories 📸</h1>
+      <p id="memory-count" style="color:#4A3B4E;">Loading…</p>
     </div>
 
     <form id="upload-form" class="upload-box">
@@ -63,8 +187,8 @@
       <button type="submit" class="btn-send" id="upload-btn">Add memory 🌸</button>
     </form>
 
-    <p id="loading-state" class="loading-state">Loading memories…</p>
-    <p id="empty-state" class="empty-state" style="display:none;">No memories yet — add your first photo above 🌱</p>
+    <p id="loading-state" class="loading-state" style="color:#4A3B4E;">Loading memories…</p>
+    <p id="empty-state" class="empty-state" style="display:none; color:#4A3B4E;">No memories yet — add your first photo above 🌱</p>
     <div id="memories-grid" class="memories-grid"></div>
   </main>
 </div>
