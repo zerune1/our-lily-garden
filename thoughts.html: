@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Deep Thoughts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .thought-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+  .thought-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: rgba(255,248,240,0.5);
+    margin-bottom: 12px;
+  }
+  .thought-content {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--cream);
+    white-space: pre-wrap;
+  }
+  .thought-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 14px;
+    font-size: 0.85rem;
+  }
+  .thought-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(255,248,240,0.6);
+  }
+  .write-box {
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 32px;
+  }
+  .write-box textarea {
+    width: 100%;
+    min-height: 120px;
+    resize: vertical;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: var(--cream);
+    padding: 14px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    outline: none;
+  }
+  .intro-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255,248,240,0.55);
+    max-width: 420px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div id="loading-gate" class="page" style="display:flex; align-items:center; justify-content:center;">
+  <p style="opacity:0.6;">Opening the quiet space…</p>
+</div>
+
+<div id="app-root" class="page" style="visibility:hidden;">
+  <div class="sky-layer"></div>
+
+  <nav class="navbar">
+    <a href="garden.html" class="brand" style="text-decoration:none;">🌸 Our Lily Garden</a>
+    <a href="garden.html" class="btn-ghost" style="text-decoration:none;">← Back to garden</a>
+  </nav>
+
+  <main class="content">
+    <div class="garden-heading">
+      <h1>Deep Thoughts 🌙</h1>
+      <p id="thought-count">Loading…</p>
+    </div>
+
+    <p class="intro-note">A quiet space for the things that are harder to say out loud. No pressure to reply — just to be heard.</p>
+
+    <form id="write-form" class="write-box">
+      <textarea id="thought-content" placeholder="What's on your mind, really?" required></textarea>
+      <button type="submit" class="btn-send" id="write-btn" style="margin-top:14px;">Share this 🌙</button>
+    </form>
+
+    <p id="loading-state" class="loading-state">Loading…</p>
+    <p id="empty-state" class="empty-state" style="display:none;">Nothing shared yet — when you're ready 🌱</p>
+    <div id="thoughts-list"></div>
+  </main>
+</div>
+
+<script type="module">
+  import { initThoughts } from "./js/thoughts.js";
+  initThoughts();
+</script>
+</body>
+</html>
