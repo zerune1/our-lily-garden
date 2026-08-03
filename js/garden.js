@@ -198,7 +198,7 @@ async function loadNotes() {
 function renderNoteCard(note) {
   const author = profilesById[note.author_id]?.nickname || "Someone";
   const icon = STYLE_ICON[note.style] || "📝";
-  const date = new Date(note.created_at).toLocaleDateString();
+  const date = new Date(note.created_at).toLocaleString();
   const safeContent = escapeHtml(note.content);
   const isMine = note.author_id === currentUser.id;
   const encodedContent = encodeURIComponent(note.content);
