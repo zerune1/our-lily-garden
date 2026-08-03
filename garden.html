@@ -7,6 +7,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
+<style>
+  .badge {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: #E14C4C;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 999px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+</style>
 </head>
 <body>
 
@@ -37,10 +54,10 @@
 
     <div class="garden-heading">
       <h1>Welcome back to your garden 🌿</h1>
-      <a href="memories.html" style="display:inline-block; margin-top:8px; font-size:0.85rem; color:var(--sky); text-decoration:underline;">📸 View our Memory Gallery</a>
-      <a href="openwhen.html" style="display:inline-block; margin-top:8px; margin-left:12px; font-size:0.85rem; color:var(--pink); text-decoration:underline;">💌 Open When Letters</a>
-      <a href="jar.html" style="display:inline-block; margin-top:8px; margin-left:12px; font-size:0.85rem; color:var(--lavender); text-decoration:underline;">🫙 Reasons I Love You</a>
-      <a href="thoughts.html" style="display:inline-block; margin-top:8px; margin-left:12px; font-size:0.85rem; color:#B8A8D8; text-decoration:underline;">🌙 Deep Thoughts</a>
+      <a href="memories.html" style="display:inline-block; margin-top:8px; font-size:0.85rem; color:var(--sky); text-decoration:underline;">📸 View our Memory Gallery<span class="badge" id="badge-memories"></span></a>
+      <a href="openwhen.html" style="display:inline-block; margin-top:8px; margin-left:12px; font-size:0.85rem; color:var(--pink); text-decoration:underline;">💌 Open When Letters<span class="badge" id="badge-letters"></span></a>
+      <a href="jar.html" style="display:inline-block; margin-top:8px; margin-left:12px; font-size:0.85rem; color:var(--lavender); text-decoration:underline;">🫙 Reasons I Love You<span class="badge" id="badge-jar"></span></a>
+      <a href="thoughts.html" style="display:inline-block; margin-top:8px; margin-left:12px; font-size:0.85rem; color:#B8A8D8; text-decoration:underline;">🌙 Deep Thoughts<span class="badge" id="badge-thoughts"></span></a>
       <p id="note-count">Loading…</p>
     </div>
 
@@ -70,8 +87,10 @@
 <script type="module">
   import { initGarden } from "./js/garden.js";
   import { startLoveCounter } from "./js/loveCounter.js";
+  import { loadBadges } from "./js/badges.js";
   initGarden();
   startLoveCounter();
+  loadBadges();
 </script>
 </body>
 </html>
