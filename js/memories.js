@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient.js";
+import { markFeatureViewed } from "./badges.js";
 
 let currentUser = null;
 let profilesById = {};
@@ -17,6 +18,8 @@ export async function initMemories() {
 
   document.getElementById("app-root").style.visibility = "visible";
   document.getElementById("loading-gate").style.display = "none";
+
+  markFeatureViewed("memories");
 
   await loadProfiles();
   wireUploadForm();
