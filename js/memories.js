@@ -158,7 +158,7 @@ async function loadMemories() {
 }
 
 function renderMemoryCard(memory) {
-  const date = new Date(memory.created_at).toLocaleDateString();
+  const date = new Date(memory.created_at).toLocaleString();
   const caption = escapeHtml(memory.caption || "");
   const tags = (memory.tags || []).map((t) => `#${escapeHtml(t)}`).join(" ");
   const isMine = memory.author_id === currentUser.id;
