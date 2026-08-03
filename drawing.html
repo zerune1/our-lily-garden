@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Coloring Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Baloo+2:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  #app-root.page {
+    background: linear-gradient(135deg, #FFE3F1 0%, #E3D9FF 45%, #D4F0E8 100%);
+  }
+  .board-title { font-family: 'Baloo 2', cursive; color: #6B4E8E; text-align:center; }
+  .template-picker { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
+  .template-thumb {
+    background: #fff; border: 3px solid transparent; border-radius: 16px;
+    padding: 6px; cursor: pointer; box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  }
+  .template-thumb.active { border-color: #F2A6C6; }
+  .template-thumb canvas { display:block; border-radius:10px; }
+  .canvas-wrap {
+    position: relative; width: 100%; max-width: 340px; margin: 0 auto 16px;
+    border-radius: 20px; overflow: hidden; box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+    background: #fff; touch-action: none;
+  }
+  .canvas-wrap canvas { position:absolute; top:0; left:0; width:100%; height:100%; touch-action:none; }
+  .toolbar {
+    max-width: 340px; margin: 0 auto 24px;
+    background: rgba(255,255,255,0.6); border-radius: 18px; padding: 14px;
+  }
+  .palette { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:12px; }
+  .swatch {
+    width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25); cursor: pointer;
+  }
+  .swatch.active { outline: 3px solid #6B4E8E; }
+  .tool-row { display:flex; align-items:center; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .tool-btn {
+    border: none; border-radius: 999px; padding: 8px 16px; font-family:'Baloo 2',cursive;
+    font-size: 0.85rem; cursor: pointer; background:#fff; color:#6B4E8E;
+  }
+  .tool-btn.active { background:#6B4E8E; color:#fff; }
+  .gallery-grid { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+  .draw-card {
+    background:#fff; border-radius:14px; padding:8px 8px 30px; width:150px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2); position:relative; transform:rotate(-1deg);
+  }
+  .draw-card:nth-child(even){ transform:rotate(1deg); }
+  .draw-card img { width:100%; border-radius:8px; display:block; }
+  .draw-card .who { font-size:0.7rem; color:#6B4E8E; text-align:center; margin-top:6px; font-family:'Baloo 2',cursive;}
+  .draw-card .del { position:absolute; top:6px; right:8px; background:none; border:none; font-size:0.9rem; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<div id="loading-gate" class="page" style="display:flex; align-items:center; justify-content:center;">
+  <p style="opacity:0.6;">Setting up your crayons…</p>
+</div>
+
+<div id="app-root" class="page" style="visibility:hidden;">
+  <nav class="navbar" style="position:relative; z-index:5;">
+    <a href="garden.html" class="brand" style="text-decoration:none;">🌸 Our Lily Garden</a>
+    <a href="garden.html" class="btn-ghost" style="text-decoration:none;">← Back to garden</a>
+  </nav>
+
+  <main class="content" style="position:relative; z-index:5;">
+    <h1 class="board-title">🎨 Coloring Board</h1>
+    <p style="text-align:center; color:#6B4E8E; font-size:0.85rem; margin-bottom:20px;">Pick today's picture and make it yours 🌈</p>
+
+    <div class="template-picker" id="template-picker"></div>
+
+    <div class="canvas-wrap">
+      <canvas id="template-canvas" width="320" height="300"></canvas>
+      <canvas id="draw-canvas" width="320" height="300"></canvas>
+    </div>
+
+    <div class="toolbar">
+      <div class="palette" id="palette"></div>
+      <div class="tool-row">
+        <label style="font-family:'Baloo 2',cursive; color:#6B4E8E; font-size:0.85rem;">Brush</label>
+        <input type="range" id="brush-size" min="2" max="30" value="8" />
+        <button class="tool-btn" id="eraser-btn" type="button">🧼 Eraser</button>
+        <button class="tool-btn" id="clear-btn" type="button">🗑️ Clear</button>
+      </div>
+      <div style="text-align:center; margin-top:12px;">
+        <button class="tool-btn active" id="submit-btn" style="background:#F2A6C6; color:#fff;" type="button">✨ Submit my drawing</button>
+      </div>
+    </div>
+
+    <h2 class="board-title" style="font-size:1.3rem; margin-top:30px;">Our Gallery</h2>
+    <p id="gallery-count" style="text-align:center; color:#6B4E8E; font-size:0.8rem;">Loading…</p>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </main>
+</div>
+
+<script type="module">
+  import { initDrawing } from "./js/drawing.js";
+  initDrawing();
+</script>
+</body>
+</html>
