@@ -52,6 +52,15 @@
       <p class="text" id="love-counter-text">calculating…</p>
     </div>
 
+    <div class="daily-banner" style="margin-bottom:20px;">
+      <div class="label">Good Morning / Good Night</div>
+      <div style="display:flex; gap:10px; justify-content:center; margin:12px 0;">
+        <button id="morning-btn" class="btn-send" type="button">🌸 Good Morning</button>
+        <button id="night-btn" class="btn-send" type="button">🌙 Good Night</button>
+      </div>
+      <p id="streaks-text" style="font-size:0.78rem; opacity:0.8;"></p>
+    </div>
+
     <div class="garden-heading">
       <h1>Welcome back to your garden 🌿</h1>
       <a href="memories.html" style="display:inline-block; margin-top:8px; font-size:0.85rem; color:var(--sky); text-decoration:underline;">📸 View our Memory Gallery<span class="badge" id="badge-memories"></span></a>
@@ -88,9 +97,11 @@
   import { initGarden } from "./js/garden.js";
   import { startLoveCounter } from "./js/loveCounter.js";
   import { loadBadges } from "./js/badges.js";
+  import { initGreetings } from "./js/greetings.js";
   initGarden();
   startLoveCounter();
   loadBadges();
+  initGreetings();
 </script>
 </body>
 </html>
