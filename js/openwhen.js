@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient.js";
+import { markFeatureViewed } from "./badges.js";
 
 let currentUser = null;
 let lettersData = [];
@@ -16,6 +17,8 @@ export async function initOpenWhen() {
 
   document.getElementById("app-root").style.visibility = "visible";
   document.getElementById("loading-gate").style.display = "none";
+
+  markFeatureViewed("letters");
 
   wireWriteForm();
   wireModal();
