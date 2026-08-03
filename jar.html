@@ -8,9 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 <style>
-  .jar-wrap { text-align: center; margin-bottom: 30px; }
+  .jars-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
+  .jar-col { text-align: center; width: 160px; }
   .jar-btn {
-    font-size: 6rem;
+    font-size: 4.5rem;
     background: none;
     border: none;
     cursor: pointer;
@@ -18,14 +19,13 @@
     transition: transform 0.15s ease;
   }
   .jar-btn:active { transform: scale(0.92); }
+  .jar-label { font-size: 0.8rem; margin-top: 4px; font-weight: 600; }
   .jar-reason {
-    margin-top: 20px;
-    background: rgba(245,198,216,0.12);
-    border: 1px solid rgba(245,198,216,0.3);
-    border-radius: 18px;
-    padding: 20px;
+    margin-top: 12px;
+    border-radius: 14px;
+    padding: 14px;
     font-style: italic;
-    font-size: 1.05rem;
+    font-size: 0.9rem;
     min-height: 60px;
     display: flex;
     align-items: center;
@@ -34,19 +34,31 @@
     transition: opacity 0.4s ease;
   }
   .jar-reason.show { opacity: 1; }
-  .add-box {
+  .add-box, .list-box {
     border: 1px solid rgba(255,255,255,0.1);
     background: rgba(255,255,255,0.05);
     border-radius: 20px;
     padding: 18px;
-    margin-top: 30px;
+    margin-top: 20px;
   }
+  .reason-item {
+    text-align: left;
+    font-size: 0.85rem;
+    padding: 8px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .reason-item .actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .reason-item button { background: none; border: none; cursor: pointer; font-size: 0.9rem; }
 </style>
 </head>
 <body>
 
 <div id="loading-gate" class="page" style="display:flex; align-items:center; justify-content:center;">
-  <p style="opacity:0.6;">Opening the jar…</p>
+  <p style="opacity:0.6;">Opening the jars…</p>
 </div>
 
 <div id="app-root" class="page" style="visibility:hidden;">
@@ -63,18 +75,20 @@
       <p id="reason-count">Loading…</p>
     </div>
 
-    <div class="jar-wrap">
-      <button class="jar-btn" id="jar-button">🫙</button>
-      <div class="jar-reason" id="jar-reason-box">Tap the jar 🌸</div>
-    </div>
+    <div class="jars-row" id="jars-row"></div>
 
     <form id="add-form" class="add-box">
       <div class="field">
-        <label>Add a reason to the jar</label>
+        <label>Add a reason to your jar</label>
         <input type="text" id="reason-input" placeholder="I love the way you…" required />
       </div>
-      <button type="submit" class="btn-send" id="add-btn">Add to jar 🫙</button>
+      <button type="submit" class="btn-send" id="add-btn">Add to my jar 🫙</button>
     </form>
+
+    <div class="list-box">
+      <label style="font-size:0.85rem; opacity:0.8;">Your written reasons</label>
+      <div id="my-reasons-list"></div>
+    </div>
   </main>
 </div>
 
