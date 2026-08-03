@@ -1,4 +1,5 @@
 import { supabase } from "./supabaseClient.js";
+import { markFeatureViewed } from "./badges.js";
 
 let currentUser = null;
 let allReasons = [];
@@ -15,6 +16,8 @@ export async function initJar() {
 
   document.getElementById("app-root").style.visibility = "visible";
   document.getElementById("loading-gate").style.display = "none";
+
+  markFeatureViewed("jar");
 
   wireJarButton();
   wireAddForm();
